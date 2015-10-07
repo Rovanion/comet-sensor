@@ -20,12 +20,14 @@ def cli(config, verbose):
 
 
 @cli.command()
-@click.option('--url', default='http://192.168.1.213/',
-              help='The base url of your web sensor.')
+@click.argument('url')
 @pass_config
 def fetch(config, url):
-    """Fetches metrics from Sensor."""
-    dataPath = 'data/' + datetime.now().strftime('%Y-%m-%d_%H:%:M%S')
+    """Fetches and stores metrics from Sensor at the URL given."""
+    dataPath = 'data/' + datetime.now().strftime('%Y-%m-%d_%H:%M:%S.csv')
+    if not url.startswith('http://'):
+        url = 'http://' + url
+    url += '/export_comma.csv'
 
     if config.verbose:
         click.echo('Fetching data from' + url + 'and saving it in' + dataPath)
