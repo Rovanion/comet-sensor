@@ -18,18 +18,30 @@ A dog simple script for retreiving and dealing with climate data from the Comet 
 Dependencies
 ------------
 
-This project depends on the python module called click. On Debian and Ubuntu it's installed by running:
+This project depends on the python module click and the python package manager pip. On Ubuntu they are installed by running:
 
 ```bash
-sudo apt-get install python3-click
+sudo apt-get install python3-click python3-pip
 ```
 
-On all Linux distributions it can be installed through pip, though it's always recommended to use the distribution package manager since those usually come with the promise of semi-automatic security updates.
+On all Linux distributions click can be installed through pip, though it's always recommended to use the distribution package manager since those usually come with the promise of semi-automatic security updates.
 
 ```bash
 pip install click
 ```
 
+
+
+Installation
+------------
+
+To install from source first install the dependencies detailed above and then run the following:
+
+```bash
+git clone https://github.com/Rovanion/comet-web-sensor-data-handler.git
+cd comet-web-sensor-data-handler
+pip install .
+```
 
 
 Usage

@@ -3,7 +3,7 @@ import urllib.request
 import csv
 import glob
 import codecs
-from config import passConfig
+from comet.config import passConfig
 from datetime import datetime
 
 

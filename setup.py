@@ -1,14 +1,16 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='comet',
-    version='0.1',
-    py_modules=['comet'],
-    install_requires=[
-        'Click',
-    ],
+    version='0.2',
+    author = "Rovanion Luckey",
+    author_email = "rovanion.luckey@gmail.com",
+    description = ("A simple tool for retreiving and dealing with climate data from the Comet T6540 Climate sensor."),
+    license = "GPL3",
+    packages=find_packages(exclude=["*.tests", "*.tests.*", "examples"]),
     entry_points='''
         [console_scripts]
-        comet=comet:cli
+        comet=comet.main:cli
     ''',
+     include_package_data = True
 )
