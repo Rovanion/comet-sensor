@@ -1,3 +1,9 @@
+"""
+Module containing the logic associated with passing configuration
+between the different functions of comet as well as loading and
+saving it.
+"""
+
 import click
 import os
 import configparser
@@ -5,6 +11,9 @@ import configparser
 APP_NAME = 'comet'
 
 class Config(object):
+    """
+    Holds configuration and is passed between functions of comet.
+    """
     def __init__(self):
         self.data_folder = click.get_app_dir(APP_NAME)
         self.conf_file = os.path.join(self.data_folder, 'comet.ini')

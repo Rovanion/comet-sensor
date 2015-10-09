@@ -95,3 +95,11 @@ To install the development version of comet on your folder into your newly creat
 ```bash
 pip3 install --editable .
 ```
+
+To keep everything nice and clean we should also lint our code before commiting it, still standing in the root of the source code folder:
+
+```bash
+pip3 install git-lint
+sudo apt-get install pep8
+ln -s `which pre-commit.git-lint.sh` .git/hooks/pre-commit
+```

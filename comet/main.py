@@ -1,3 +1,6 @@
+"""
+The entry point of the comet cli program.
+"""
 import click
 import os
 import urllib.request
@@ -18,7 +21,7 @@ from datetime import datetime
 @passConfig
 def cli(config, verbose, data_folder, config_file):
     """Command line tool for managing data from Comet Web Sensors."""
-    config.read_conf(config_file);
+    config.read_conf(config_file)
     config.verbose = verbose
     if data_folder is not None:
         config.dataFolder = data_folder
@@ -32,29 +35,34 @@ def cli(config, verbose, data_folder, config_file):
 @passConfig
 def fetch(config, url):
     """Fetches and stores metrics from Sensor at the URL given."""
-    dataPath = 'data/' + datetime.now().strftime('%Y-%m-%d_%H:%M:%S.csv')
+    new_file = config.data_folder + datetime.now().strftime('%Y-%m-%d_%H:%M:%S.csv')
     if not url.startswith('http://'):
         url = 'http://' + url
     url += '/export_comma.csv'
 
     if config.verbose:
-        click.echo('Fetching data from' + url + 'and saving it in' + dataPath)
+        click.echo('Fetching data from' + url + 'and saving it in' + new_file)
+
+    previous_file = sorted(os.listdir(config.data_folder))[-1]
 
     try:
-        urllib.request.urlretrieve(url, dataPath)
+        urllib.request.urlretrieve(url, new_file)
     except urllib.error.URLError as e:
         click.echo('Failed to establish an HTTP connection.')
         click.echo(e.reason)
         exit(1)
     except urllib.error.HTTPError as e:
         click.echo('Managed to connect but failed with HTTP Error code: ' + e.code)
-        click.echo(e.reason);
+        click.echo(e.reason)
         exit(1)
+
+    # Here we'll try to remove overlapping data points.
+
 
 
 
 @cli.command()
-@click.option( '-o', '--out-path', default='./all_data.csv',
+@click.option('-o', '--out-path', default='./all_data.csv',
               help='Specifies which path to output to.')
 @passConfig
 def dump(config, out_path):
@@ -64,7 +72,7 @@ def dump(config, out_path):
 
     rows = []
     reader = None
-    for path in glob.iglob(config.dataFolder + '*.csv'):
+    for path in glob.iglob(config.data_folder + '*.csv'):
         with codecs.open(path, 'r', encoding='latin1') as inFile:
             reader = csv.reader(inFile)
             for row in reader:
