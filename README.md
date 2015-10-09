@@ -1,17 +1,18 @@
-<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-generate-toc again -->
-**Table of Contents**
-
-- [Comet Web Sensor Data Handler](#comet-web-sensor-data-handler)
-    - [Dependencies](#dependencies)
-    - [Usage](#usage)
-    - [Development](#development)
-
-<!-- markdown-toc end -->
 Comet Web Sensor Data Handler
 =============================
 
 A dog simple script for retreiving and dealing with climate data from the Comet T6540 Climate sensor written in Python 3.
 
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-generate-toc again -->
+**Table of Contents**
+
+- [Comet Web Sensor Data Handler](#comet-web-sensor-data-handler)
+    - [Dependencies](#dependencies)
+    - [Installation](#installation)
+    - [Usage](#usage)
+    - [Development](#development)
+
+<!-- markdown-toc end -->
 
 
 
