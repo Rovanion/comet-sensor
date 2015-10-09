@@ -27,7 +27,7 @@ sudo apt-get install python3-click python3-pip
 On all Linux distributions click can be installed through pip, though it's always recommended to use the distribution package manager since those usually come with the promise of semi-automatic security updates.
 
 ```bash
-pip install click
+pip3 install click
 ```
 
 
@@ -40,7 +40,7 @@ To install from source first install the dependencies detailed above and then ru
 ```bash
 git clone https://github.com/Rovanion/comet-web-sensor-data-handler.git
 cd comet-web-sensor-data-handler
-pip install .
+pip3 install .
 ```
 
 
@@ -92,5 +92,5 @@ deactivate
 To install the development version of comet on your folder into your newly created virtualenv, make sure that you didn't just deactivate it, run:
 
 ```bash
-pip install --editable .
+pip3 install --editable .
 ```
