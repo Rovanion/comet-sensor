@@ -65,9 +65,14 @@ But since the sensor clears its memory on reboot it's always safer to fetch more
 Development
 -----------
 
-It's recommended to use virtualenv for development which allows for setup and other possibly system damaging procedures without actually running the risk of doing so:
+Development requires a couple additional dependencies:
 
-To set up the virtual environment for the first time:
+```bash
+sudo pip3 install git-lint
+sudo apt-get install virtualenv pep8
+```
+
+It's recommended to use virtualenv for development which allows for setup and other possibly system damaging procedures without actually running the risk of doing so. To set up the virtual environment for the first time:
 
 ```bash
 virtualenv -p /usr/bin/python3 env
@@ -99,7 +104,5 @@ pip3 install --editable .
 To keep everything nice and clean we should also lint our code before commiting it, still standing in the root of the source code folder:
 
 ```bash
-pip3 install git-lint
-sudo apt-get install pep8
 ln -s `which pre-commit.git-lint.sh` .git/hooks/pre-commit
 ```
