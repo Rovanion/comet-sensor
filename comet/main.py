@@ -1,4 +1,5 @@
 import click
+import os
 import urllib.request
 import csv
 import glob
@@ -9,16 +10,20 @@ from datetime import datetime
 
 
 @click.group()
-@click.option('-v', '--verbose', is_flag=True)
-@click.option('-d', '--data-folder', default='./data/',
+@click.option('-v', '--verbose', is_flag=True, default=False)
+@click.option('-d', '--data-folder', type=click.Path(exists=True),
               help='The folder in which data from the climate sensor is stored.')
+@click.option('-c', '--config-file', type=click.File(mode='r'),
+              help='Specifies a config file for this program to read.')
 @passConfig
-def cli(config, verbose, data_folder):
+def cli(config, verbose, data_folder, config_file):
     """Command line tool for managing data from Comet Web Sensors."""
-    if verbose:
-        config.verbose = verbose
-    if data_folder:
+    config.read_conf(config_file);
+    config.verbose = verbose
+    if data_folder is not None:
         config.dataFolder = data_folder
+
+
 
 
 
@@ -74,3 +79,11 @@ def dump(config, out_path):
         writer = csv.writer(outFile)
         for row in rows:
             writer.writerow(row)
+
+@cli.command()
+@click.argument('out-path', type=click.Path(), required=False)
+@passConfig
+def write_conf(config, out_path):
+    """Write a config file based on the given arguments to out-path.
+    Defaults to the standard config file location for your operating system."""
+    config.write_conf(out_path)
