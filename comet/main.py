@@ -1,10 +1,11 @@
 """
 The entry point of the comet cli program.
 """
-import click
 import os
+import sys
+import click
 import urllib.request
-import csv
+import comet.csvio as csvio
 import glob
 import codecs
 from comet.config import passConfig
@@ -28,36 +29,66 @@ def cli(config, verbose, data_folder, config_file):
 
 
 
-
-
 @cli.command()
 @click.argument('url')
 @passConfig
 def fetch(config, url):
     """Fetches and stores metrics from Sensor at the URL given."""
-    new_file = config.data_folder + datetime.now().strftime('%Y-%m-%d_%H:%M:%S.csv')
+    new_path = os.path.join(config.data_folder, datetime.now().strftime('%Y-%m-%d_%H:%M:%S.csv'))
+    new_temp_path = new_path + 'temp'
     if not url.startswith('http://'):
         url = 'http://' + url
     url += '/export_comma.csv'
 
     if config.verbose:
-        click.echo('Fetching data from' + url + 'and saving it in' + new_file)
-
-    previous_file = sorted(os.listdir(config.data_folder))[-1]
+        click.echo('Fetching data from' + url + 'and saving it in' + new_temp_path)
 
     try:
-        urllib.request.urlretrieve(url, new_file)
+        previous_path = os.path.join(config.data_folder, sorted(os.listdir(config.data_folder))[-1])
+    except IndexError:
+        previous_path = None
+
+    try:
+        urllib.request.urlretrieve(url, new_temp_path)
     except urllib.error.URLError as e:
         click.echo('Failed to establish an HTTP connection.')
         click.echo(e.reason)
-        exit(1)
+        sys.exit(1)
     except urllib.error.HTTPError as e:
         click.echo('Managed to connect but failed with HTTP Error code: ' + e.code)
         click.echo(e.reason)
-        exit(1)
+        sys.exit(2)
 
-    # Here we'll try to remove overlapping data points.
+    try:
+        new_rows = csvio.loadOne(new_temp_path)
+        if not new_rows[0][0].split(';')[0] == "Device:":
+            click.echo('Managed to connect and fetch data from something, '
+                       'but it was not a CSV from a Comet Web Sensor.')
+            click.echo((new_rows[0][0].split(';')[0]))
+            sys.exit(3)
 
+        # Here we'll try to remove overlapping data points with the last file.
+        # It get's nasty due to gradual adjustments of ntp time.
+        if previous_path is not None:
+            previous_rows = csvio.loadOne(previous_path)
+            newest_date_in_previous = previous_rows[5][0].split(';')[0].split(' ')[1]
+            newest_H_M_in_previous = ':'.join(previous_rows[5][0].split(' ')[0].split(':')[0:2])
+            time_of_newest_data_in_previous = datetime.strptime(
+                newest_date_in_previous + ' ' + newest_H_M_in_previous,
+                '%Y-%m-%d %H:%M')
+            filtered_rows = []
+            for row in new_rows:
+                if len(row) <= 1:
+                    continue
+                time_of_row = datetime.strptime(row[0].split(';')[0], '%H:%M:%S %Y-%m-%d')
+                if time_of_newest_data_in_previous < time_of_row:
+                    filtered_rows.append(row)
+        if config.verbose:
+            click.echo('Rewriting treated CSV to: ' + new_path)
+        csvio.writeRows(filtered_rows, new_path)
+        print(filtered_rows)
+    finally:
+        os.remove(new_temp_path)
 
 
 
@@ -69,24 +100,10 @@ def dump(config, out_path):
     """Output one big csv file containing all the data gathered thus far."""
     if config.verbose:
         click.echo('Dumping to' + outpath)
+    rows = csvio.loadAll()
+    csvio.writeRows(rows, out_path)
 
-    rows = []
-    reader = None
-    for path in glob.iglob(config.data_folder + '*.csv'):
-        with codecs.open(path, 'r', encoding='latin1') as inFile:
-            reader = csv.reader(inFile)
-            for row in reader:
-                if row not in rows:
-                    rows.append(row)
 
-    if not reader:
-            click.echo('No csv files found, nothing to do')
-            exit(1)
-
-    with open(out_path, 'w') as outFile:
-        writer = csv.writer(outFile)
-        for row in rows:
-            writer.writerow(row)
 
 @cli.command()
 @click.argument('out-path', type=click.Path(), required=False)

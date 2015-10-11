@@ -16,6 +16,8 @@ class Config(object):
     """
     def __init__(self):
         self.data_folder = click.get_app_dir(APP_NAME)
+        if not os.path.exists(self.data_folder):
+            os.makedirs(self.data_folder)
         self.conf_file = os.path.join(self.data_folder, 'comet.ini')
 
 
@@ -39,7 +41,8 @@ class Config(object):
             path = self.conf_file
         config = configparser.ConfigParser()
         config[APP_NAME] = {}
-        for state in [a for a in dir(self) if not a.startswith('__') and not callable(getattr(self,a))]:
+        for state in [a for a in dir(self) if not a.startswith('__')
+                      and not callable(getattr(self,a))]:
             config[APP_NAME][state] = str(getattr(self, state))
         if not os.path.exists(os.path.dirname(path)):
             os.makedirs(os.path.dirname(path))
