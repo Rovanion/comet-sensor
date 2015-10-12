@@ -71,10 +71,13 @@ def fetch(config, url):
         # It get's nasty due to gradual adjustments of ntp time.
         if previous_path is not None:
             previous_rows = csvio.loadOne(previous_path)
-            newest_date_in_previous = previous_rows[5][0].split(';')[0].split(' ')[1]
-            newest_H_M_in_previous = ':'.join(previous_rows[5][0].split(' ')[0].split(':')[0:2])
+            data_start = 0
+            if previous_rows[data_start][0].split(';')[0] == "Device:":
+                data_start = 5
+            latest_previous_date = previous_rows[data_start][0].split(';')[0].split(' ')[1]
+            latest_previous_H_M = ':'.join(previous_rows[data_start][0].split(' ')[0].split(':')[0:2])
             time_of_newest_data_in_previous = datetime.strptime(
-                newest_date_in_previous + ' ' + newest_H_M_in_previous,
+                latest_previous_date + ' ' + latest_previous_H_M,
                 '%Y-%m-%d %H:%M')
             filtered_rows = []
             for row in new_rows:
@@ -83,10 +86,10 @@ def fetch(config, url):
                 time_of_row = datetime.strptime(row[0].split(';')[0], '%H:%M:%S %Y-%m-%d')
                 if time_of_newest_data_in_previous < time_of_row:
                     filtered_rows.append(row)
+
         if config.verbose:
             click.echo('Rewriting treated CSV to: ' + new_path)
         csvio.writeRows(filtered_rows, new_path)
-        print(filtered_rows)
     finally:
         os.remove(new_temp_path)
 
