@@ -3,11 +3,12 @@ The entry point of the comet cli program.
 """
 import os
 import sys
+import glob
 import click
 import urllib.request
 import comet.csvio as csvio
-from comet.config import passConfig
 from datetime import datetime
+from comet.config import passConfig
 
 
 
@@ -42,7 +43,8 @@ def fetch(config, url):
         click.echo('Fetching data from' + url + 'and saving it in' + new_temp_path)
 
     try:
-        previous_path = os.path.join(config.data_folder, sorted(os.listdir(config.data_folder))[-1])
+        previous_path = os.path.join(config.data_folder,
+                                     sorted(glob.glob(config.data_folder + '*.csv'))[-1])
     except IndexError:
         previous_path = None
 
@@ -69,9 +71,11 @@ def fetch(config, url):
         # It get's nasty due to gradual adjustments of ntp time.
         if previous_path is not None:
             previous_rows = csvio.loadOne(previous_path)
+            # A data point row in the csv is at least the datetime and a data point.
             data_start = 0
-            if previous_rows[data_start][0].split(';')[0] == "Device:":
-                data_start = 5
+            while(len(previous_rows[data_start]) <= 1):
+                data_start += 1
+
             latest_previous_date = previous_rows[data_start][0].split(';')[0].split(' ')[1]
             latest_previous_H_M = ':'.join(previous_rows[data_start][0].split(' ')[0].split(':')[0:2])
             time_of_newest_data_in_previous = datetime.strptime(

@@ -1,6 +1,7 @@
 import csv
 import codecs
 import glob
+import click
 from comet.config import passConfig
 
 
@@ -8,14 +9,14 @@ from comet.config import passConfig
 def loadAll(config):
     rows = []
     reader = None
-    for path in glob.iglob(config.data_folder + '*.csv'):
+    for path in sorted(glob.iglob(config.data_folder + '*.csv')):
         with codecs.open(path, 'r', encoding='latin1') as inFile:
             reader = csv.reader(inFile)
             for row in reader:
                 if row not in rows:
                     rows.append(row)
     if reader is None:
-        click.echo('No csv files found, nothing to do')
+        click.echo('No csv files found in ' + config.data_folder + ', nothing to do.')
         exit(1)
     return rows;
 
