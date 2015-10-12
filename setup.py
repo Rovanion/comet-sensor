@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='comet',
-    version='0.2',
+    name='comet-sensor',
+    version='0.3',
     author = "Rovanion Luckey",
     author_email = "rovanion.luckey@gmail.com",
     description = ("A simple tool for retreiving and dealing with climate data from the Comet T6540 Climate sensor."),
@@ -10,7 +10,7 @@ setup(
     packages=find_packages(exclude=["*.tests", "*.tests.*", "examples"]),
     entry_points='''
         [console_scripts]
-        comet=comet.main:cli
+        comet-sensor=comet.main:cli
     ''',
      include_package_data = True
 )

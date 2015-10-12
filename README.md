@@ -1,7 +1,7 @@
 Comet Web Sensor Data Handler
 =============================
 
-A dog simple script for retreiving and dealing with climate data from the Comet T6540 Climate sensor written in Python 3.
+A simple script for retreiving and dealing with climate data from the Comet T6540 Climate sensor written in Python 3.
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-generate-toc again -->
 **Table of Contents**
@@ -40,7 +40,7 @@ To install from source first install the dependencies detailed above and then ru
 
 ```bash
 git clone https://github.com/Rovanion/comet-web-sensor-data-handler.git
-cd comet-web-sensor-data-handler
+cd comet-sensor
 pip3 install .
 ```
 
@@ -51,7 +51,7 @@ Usage
 In order to fetch sensor data from your Comet web sensor run the following:
 
 ```bash
-comet fetch http://url.to.web.sensor
+comet-sensor fetch http://url.to.web.sensor
 ```
 
 Since at least the T6540 only keeps 1000 data points you should do this at least 1000/samples\_per\_day times a day. Sample rate can be found in the general settings for your web sensor.
@@ -60,7 +60,11 @@ Example: The sample rate is once every minute. We should then fetch at least eve
 
 But since the sensor clears its memory on reboot it's always safer to fetch more frequently.
 
+You can then use the dump command to export all the gathered data:
 
+```bash
+comet-sensor dump all-data.csv
+```
 
 Development
 -----------
@@ -72,7 +76,7 @@ sudo pip3 install git-lint
 sudo apt-get install virtualenv pep8 pylint
 ```
 
-It's recommended to use virtualenv for development which allows for setup and other possibly system damaging procedures without actually running the risk of doing so. To set up the virtual environment for the first time:
+It's recommended to use virtualenv for development which allows for setup and other possibly system damaging procedures without actually running the risk of doing so. To set up the virtual environment for the first time, stand in the source code folder and run:
 
 ```bash
 virtualenv -p /usr/bin/python3 env
@@ -95,7 +99,7 @@ In order to escape the virtualenv one can either close the terminal or run:
 ```bash
 deactivate
 ```
-To install the development version of comet on your folder into your newly created virtualenv, make sure that you didn't just deactivate it, run:
+To install the development version of comet-sensor on your folder into your newly created virtualenv, make sure that you didn't just deactivate it, run:
 
 ```bash
 pip3 install --editable .
