@@ -60,10 +60,10 @@ Example: The sample rate is once every minute. We should then fetch at least eve
 
 But since the sensor clears its memory on reboot it's always safer to fetch more frequently.
 
-You can then use the dump command to export all the gathered data:
+You can then use the dump command to export all the gathered data, by default to a file called all_data.csv in the current working directory:
 
 ```bash
-comet-sensor dump all-data.csv
+comet-sensor dump
 ```
 
 Development

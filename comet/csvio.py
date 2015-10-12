@@ -1,7 +1,11 @@
 import csv
 import codecs
+import glob
+from comet.config import passConfig
 
-def leadAll():
+
+@passConfig
+def loadAll(config):
     rows = []
     reader = None
     for path in glob.iglob(config.data_folder + '*.csv'):
@@ -16,6 +20,7 @@ def leadAll():
     return rows;
 
 
+
 def loadOne(path):
     rows = []
     with codecs.open(path, 'r', encoding='latin1') as inFile:
@@ -23,6 +28,7 @@ def loadOne(path):
         for row in reader:
             rows.append(row)
     return rows
+
 
 
 def writeRows(rows, out_path):

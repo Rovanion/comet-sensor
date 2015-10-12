@@ -6,8 +6,6 @@ import sys
 import click
 import urllib.request
 import comet.csvio as csvio
-import glob
-import codecs
 from comet.config import passConfig
 from datetime import datetime
 
