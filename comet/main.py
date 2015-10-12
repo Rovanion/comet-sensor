@@ -84,6 +84,8 @@ def fetch(config, url):
                 time_of_row = datetime.strptime(row[0].split(';')[0], '%H:%M:%S %Y-%m-%d')
                 if time_of_newest_data_in_previous < time_of_row:
                     filtered_rows.append(row)
+        else:
+            filtered_rows = new_rows
 
         if config.verbose:
             click.echo('Rewriting treated CSV to: ' + new_path)
