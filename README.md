@@ -39,7 +39,7 @@ Installation
 To install from source first install the dependencies detailed above and then run the following:
 
 ```bash
-git clone https://github.com/Rovanion/comet-web-sensor-data-handler.git
+git clone https://github.com/Rovanion/comet-sensor.git
 cd comet-sensor
 sudo pip3 install .
 ```
