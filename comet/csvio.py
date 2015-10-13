@@ -1,3 +1,7 @@
+"""
+Library for comet-sensor containing functions related to csv file io.
+"""
+import sys
 import csv
 import codecs
 import glob
@@ -17,7 +21,7 @@ def loadAll(config):
                     rows.append(row)
     if reader is None:
         click.echo('No csv files found in ' + config.data_folder + ', nothing to do.')
-        exit(1)
+        sys.exit(4)
     return rows;
 
 
@@ -28,6 +32,9 @@ def loadOne(path):
         reader = csv.reader(inFile)
         for row in reader:
             rows.append(row)
+    if not rows:
+        click.echo('No data found in: ' + path)
+        sys.exit(5)
     return rows
 
 

@@ -10,6 +10,7 @@ A simple script for retreiving and dealing with climate data from the Comet T654
     - [Dependencies](#dependencies)
     - [Installation](#installation)
     - [Usage](#usage)
+    - [License](#license)
     - [Development](#development)
 
 <!-- markdown-toc end -->
@@ -45,6 +46,7 @@ sudo pip3 install .
 ```
 
 
+
 Usage
 -----
 
@@ -65,6 +67,15 @@ You can then use the dump command to export all the gathered data, by default to
 ```bash
 comet-sensor dump
 ```
+
+
+
+License
+-------
+
+You are herby licensed to use this program and all of it's components under the GNU General Public License version 3. A complete copy of the license is available in the LICENSE.txt file and can also be viewed on the [GNU website](http://www.gnu.org/licenses/gpl-3.0.html).
+
+
 
 Development
 -----------
