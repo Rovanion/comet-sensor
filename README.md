@@ -1,7 +1,7 @@
 Comet Web Sensor Data Handler
 =============================
 
-A simple script for retreiving and dealing with climate data from the Comet T6540 Climate sensor written in Python. It should run both on Python 2 and 3, but this document deals with 3.
+A simple script for retreiving and dealing with climate data from the Comet T6540 Climate sensor written in Python. It's written for Python 3, but can be made to work in Python 2 with minor modifications to the uses of URLlib.
 
 [![Build Status](https://travis-ci.org/Rovanion/comet-sensor.svg)](https://travis-ci.org/Rovanion/comet-sensor)
 
