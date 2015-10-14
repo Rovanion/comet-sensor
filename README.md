@@ -1,7 +1,9 @@
 Comet Web Sensor Data Handler
 =============================
 
-A simple script for retreiving and dealing with climate data from the Comet T6540 Climate sensor written in Python 3.
+A simple script for retreiving and dealing with climate data from the Comet T6540 Climate sensor written in Python. It should run both on Python 2 and 3, but this document deals with 3.
+
+[![Build Status](https://travis-ci.org/Rovanion/comet-sensor.svg)](https://travis-ci.org/Rovanion/comet-sensor)
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-generate-toc again -->
 **Table of Contents**
@@ -26,11 +28,7 @@ This project depends on the python module click and the python package manager p
 sudo apt-get install python3-click python3-pip
 ```
 
-On all Linux distributions click can be installed through pip, though it's always recommended to use the distribution package manager since those usually come with the promise of semi-automatic security updates.
-
-```bash
-sudo pip3 install click
-```
+On all Linux distributions click can be installed through pip, though it's always recommended to use the distribution package manager since those usually come with the promise of semi-automatic security updates. Dependency installation through pip is detailed in installation.
 
 
 
@@ -42,6 +40,7 @@ To install from source first install the dependencies detailed above and then ru
 ```bash
 git clone https://github.com/Rovanion/comet-sensor.git
 cd comet-sensor
+sudo pip3 install -r requirements.txt
 sudo pip3 install .
 ```
 
@@ -84,7 +83,7 @@ Development requires a couple additional dependencies:
 
 ```bash
 sudo pip3 install git-lint
-sudo apt-get install virtualenv pep8 pylint
+sudo apt-get install virtualenv pep8 pylint python3-pytest
 ```
 
 It's recommended to use virtualenv for development which allows for setup and other possibly system damaging procedures without actually running the risk of doing so. To set up the virtual environment for the first time, stand in the source code folder and run:
@@ -120,4 +119,14 @@ To keep everything nice and clean we should also lint our code before commiting 
 
 ```bash
 ln -s `which pre-commit.git-lint.sh` .git/hooks/pre-commit
+```
+
+
+Testing
+-------
+
+Before submitting any pull requests the code should be run through the linter as described under [Development](#development) but also pass all the existing test. Running these on your local machine is as simple as:
+
+```bash
+py.test tests/
 ```

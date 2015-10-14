@@ -28,7 +28,7 @@ def cli(config, verbose, data_folder, config_file):
     config.read_conf(config_file)
     config.verbose = verbose
     if data_folder is not None:
-        config.dataFolder = data_folder
+        config.data_folder = data_folder
 
 
 @cli.command()
@@ -43,11 +43,10 @@ def fetch(config, url):
     url += '/export.csv'
 
     if config.verbose:
-        click.echo('Fetching data from' + url + 'and saving it in' + new_temp_path)
+        click.echo('Fetching data from ' + url + ' and saving it in ' + new_temp_path)
 
     try:
-        previous_path = os.path.join(config.data_folder,
-                                     sorted(glob.glob(config.data_folder + '*.csv'))[-1])
+        previous_path = sorted(glob.glob(config.data_folder + '*.csv'))[-1]
     except IndexError:
         previous_path = None
 
@@ -110,7 +109,7 @@ def fetch(config, url):
 def dump(config, out_path):
     """Output one big csv file containing all the data gathered thus far."""
     if config.verbose:
-        click.echo('Dumping to' + outpath)
+        click.echo('Dumping to' + out_path)
     rows = csvio.loadAll()
     rows = sorted(rows, key=date_from_row)
     csvio.writeRows(rows, out_path)

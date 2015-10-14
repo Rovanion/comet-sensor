@@ -14,8 +14,8 @@ def loadAll(config):
     rows = []
     reader = None
     for path in sorted(glob.iglob(config.data_folder + '*.csv')):
-        with codecs.open(path, 'r', encoding='latin1') as inFile:
-            reader = csv.reader(inFile)
+        with codecs.open(path, 'r', encoding='latin1') as in_file:
+            reader = csv.reader(in_file)
             for row in reader:
                 if row not in rows:
                     rows.append(row)
@@ -28,8 +28,8 @@ def loadAll(config):
 
 def loadOne(path):
     rows = []
-    with codecs.open(path, 'r', encoding='latin1') as inFile:
-        reader = csv.reader(inFile)
+    with codecs.open(path, 'r', encoding='latin1') as in_file:
+        reader = csv.reader(in_file)
         for row in reader:
             rows.append(row)
     if not rows:
@@ -40,7 +40,7 @@ def loadOne(path):
 
 
 def writeRows(rows, out_path):
-    with open(out_path, 'w') as outFile:
-        writer = csv.writer(outFile)
+    with open(out_path, 'w') as out_file:
+        writer = csv.writer(out_file)
         for row in rows:
             writer.writerow(row)
