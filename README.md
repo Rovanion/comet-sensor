@@ -82,8 +82,8 @@ Development
 Development requires a couple additional dependencies:
 
 ```bash
-sudo pip3 install git-lint
 sudo apt-get install virtualenv pep8 pylint python3-pytest
+sudo pip3 install -r development-requirements.txt
 ```
 
 It's recommended to use virtualenv for development which allows for setup and other possibly system damaging procedures without actually running the risk of doing so. To set up the virtual environment for the first time, stand in the source code folder and run:
