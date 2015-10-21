@@ -42,7 +42,7 @@ class Config(object):
         config = configparser.ConfigParser()
         config[APP_NAME] = {}
         for state in [a for a in dir(self) if not a.startswith('__')
-                      and not callable(getattr(self,a))]:
+                      and not callable(getattr(self, a)) and a != 'conf_file']:
             config[APP_NAME][state] = str(getattr(self, state))
         if not os.path.exists(os.path.dirname(path)):
             os.makedirs(os.path.dirname(path))
