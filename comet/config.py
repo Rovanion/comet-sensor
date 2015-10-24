@@ -37,6 +37,7 @@ class Config(object):
 
 
     def write_conf(self, path):
+        print(path)
         if path is None:
             path = self.conf_file
         config = configparser.ConfigParser()
@@ -44,7 +45,10 @@ class Config(object):
         for state in [a for a in dir(self) if not a.startswith('__')
                       and not callable(getattr(self, a)) and a != 'conf_file']:
             config[APP_NAME][state] = str(getattr(self, state))
-        if not os.path.exists(os.path.dirname(path)):
+        folder = os.path.dirname(path)
+        if folder == '':
+            folder = './'
+        if not os.path.exists(folder):
             os.makedirs(os.path.dirname(path))
         with open(path, 'w') as file:
             config.write(file)
