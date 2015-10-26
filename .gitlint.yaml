@@ -92,7 +92,7 @@ pylint:
   - .py
   command: pylint
   arguments:
-  - "--rcfile={DEFAULT_CONFIGS}/pylintrc"
+  - "--rcfile={REPO_HOME}/.pylintrc"
   - "--output-format=text"
   - "--msg-template='{{abspath}}:{{line}}:{{column}}: [{{category}}:{{symbol}}] {{obj}}: {{msg}}'"
   - "--reports=n"
