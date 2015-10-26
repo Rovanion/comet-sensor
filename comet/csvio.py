@@ -3,9 +3,9 @@ Library for comet-sensor containing functions related to csv file io.
 """
 import sys
 import csv
-import codecs
 import glob
 import click
+import codecs
 from comet.config import passConfig
 
 
