@@ -55,7 +55,7 @@ In order to fetch sensor data from your Comet web sensor run the following:
 comet-sensor fetch http://url.to.web.sensor
 ```
 
-Since at least the T6540 only keeps 1000 data points you should do this at least 1000/samples\_per\_day times a day. Sample rate can be found in the general settings for your web sensor.
+Since at least the T6540 only keeps 1000 data points you should do this at least samples\_per\_day/1000 times a day. Sample rate can be found in the general settings for your web sensor.
 
 Example: The sample rate is once every minute. We should then fetch at least every 0.7 day or once every 16th hour.
 
