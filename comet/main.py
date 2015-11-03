@@ -6,9 +6,9 @@ import re
 import sys
 import glob
 import click
+import datetime
 import urllib.request
 import comet.csvio as csvio
-from datetime import datetime
 from datetime import timedelta
 from comet.config import passConfig
 
@@ -36,7 +36,7 @@ def cli(config, verbose, data_folder, config_file):
 @passConfig
 def fetch(config, url):
     """Fetches and stores metrics from Sensor at the URL given."""
-    new_path = os.path.join(config.data_folder, datetime.now().strftime('%Y-%m-%d_%H:%M:%S.csv'))
+    new_path = os.path.join(config.data_folder, datetime.datetime.now().strftime('%Y-%m-%d_%H:%M:%S.csv'))
     new_temp_path = new_path + 'temp'
     if not url.startswith('http://'):
         url = 'http://' + url
@@ -76,7 +76,7 @@ def fetch(config, url):
             data_start = get_first_data_point_index(previous_rows)
             latest_previous_date = previous_rows[data_start][0].split(' ')[1]
             latest_previous_H_M = ':'.join(previous_rows[data_start][0].split(' ')[0].split(':')[0:2])
-            time_of_newest_data_in_previous = datetime.strptime(
+            time_of_newest_data_in_previous = datetime.datetime.strptime(
                 latest_previous_date + ' ' + latest_previous_H_M,
                 '%Y-%m-%d %H:%M') + timedelta(minutes=1)
 
@@ -140,5 +140,5 @@ def get_first_data_point_index(rows):
 def date_from_row(row):
     """Get the date from the data point row."""
     if not_data_point(row):
-        return datetime(1970, 1, 1)
-    return datetime.strptime(row[0], '%H:%M:%S %Y-%m-%d')
+        return datetime.datetime(1970, 1, 1)
+    return datetime.datetime.strptime(row[0], '%H:%M:%S %Y-%m-%d')

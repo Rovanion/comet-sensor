@@ -1,28 +1,19 @@
-import sys
-sys.path.append("..")
-import os
-from click.testing import CliRunner
+from support import *
 from comet.main import cli
 
 
-DATA_FOLDER = './test-folder/'
-
-
-def test_data_folder_not_existing():
-    runner = CliRunner()
-    result = runner.invoke(cli, ['-v', '-d', DATA_FOLDER, 'dump'])
+@isolated_filesystem
+def test_data_folder_not_existing(runner):
+    result = runner.invoke(cli, ['-v', '-d', 'doesnt_exist', 'dump'])
     assert result.exit_code == 2
+    assert result.output == ('Usage: cli [OPTIONS] COMMAND [ARGS]...\n\n'
+                             + 'Error: Invalid value for "-d" / "--data-folder"'
+                             + ': Path "doesnt_exist" does not exist.\n')
 
 
-def test_data_folder_exists():
-    runner = CliRunner()
-    with runner.isolated_filesystem():
-        try:
-            os.makedirs(DATA_FOLDER)
-            result = runner.invoke(cli, ['-d', DATA_FOLDER, 'dump'])
-            assert result.exit_code == 4
-            assert result.output == ('No csv files found in '
-                                     + DATA_FOLDER + ', nothing to do.\n')
-
-        finally:
-            os.removedirs(DATA_FOLDER)
+@isolated_filesystem
+def test_data_folder_exists(runner):
+    result = runner.invoke(cli, ['-d', TEMP_FOLDER, 'dump'])
+    assert result.exit_code == 4
+    assert result.output == ('No csv files found in '
+                             + TEMP_FOLDER + ', nothing to do.\n')
