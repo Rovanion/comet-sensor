@@ -14,8 +14,7 @@ from functools import wraps
 from click.testing import CliRunner
 
 
-
-TEST_O_CLOCK = datetime.datetime(2010, 12, 24, 17, 0, 0)
+TEST_O_CLOCK = datetime.datetime(2010, 12, 24, 15, 0, 0)
 FIRST_URL = 'http://export'
 SECOND_URL = 'http://export.1'
 EXISTING_DATA_FOLDER = os.path.join(os.path.dirname(__file__), 'data/')
