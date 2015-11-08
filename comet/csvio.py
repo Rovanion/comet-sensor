@@ -13,7 +13,7 @@ from comet.config import passConfig
 def loadAll(config):
     rows = []
     reader = None
-    for path in sorted(glob.iglob(config.data_folder + '*.csv')):
+    for path in sorted(glob.iglob(config.data_folder + '/*.csv')):
         with codecs.open(path, 'r', encoding='latin1') as in_file:
             reader = csv.reader(in_file)
             for row in reader:

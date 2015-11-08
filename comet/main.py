@@ -46,7 +46,7 @@ def fetch(config, url):
         click.echo('Fetching data from ' + url + ' and saving it in ' + new_temp_path)
 
     try:
-        previous_path = sorted(glob.glob(config.data_folder + '*.csv'))[-1]
+        previous_path = sorted(glob.glob(config.data_folder + '/*.csv'))[-1]
     except IndexError:
         previous_path = None
 
