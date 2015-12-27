@@ -6,10 +6,10 @@ import csv
 import glob
 import click
 import codecs
-from comet.config import passConfig
+from comet.config import pass_config
 
 
-@passConfig
+@pass_config
 def loadAll(config):
     rows = []
     reader = None

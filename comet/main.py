@@ -10,7 +10,7 @@ import datetime
 import urllib.request
 import comet.csvio as csvio
 from datetime import timedelta
-from comet.config import passConfig
+from comet.config import pass_config
 
 
 DATE_MATCHER = re.compile(r'\d\d:\d\d:\d\d \d{4}-\d\d-\d\d')
@@ -22,7 +22,7 @@ DATE_MATCHER = re.compile(r'\d\d:\d\d:\d\d \d{4}-\d\d-\d\d')
               help='The folder in which data from the climate sensor is stored.')
 @click.option('-c', '--config-file', type=click.File(mode='r'),
               help='Specifies a config file for this program to read.')
-@passConfig
+@pass_config
 def cli(config, verbose, data_folder, config_file):
     """Command line tool for managing data from Comet Web Sensors."""
     config.read_conf(config_file)
@@ -33,7 +33,7 @@ def cli(config, verbose, data_folder, config_file):
 
 @cli.command()
 @click.argument('url')
-@passConfig
+@pass_config
 def fetch(config, url):
     """Fetches and stores metrics from Sensor at the URL given."""
     new_path = os.path.join(config.data_folder, datetime.datetime.now().strftime('%Y-%m-%d_%H:%M:%S.csv'))
@@ -105,7 +105,7 @@ def fetch(config, url):
 @cli.command()
 @click.option('-o', '--out-path', default='./all_data.csv',
               help='Specifies which path to output to.')
-@passConfig
+@pass_config
 def dump(config, out_path):
     """Output one big csv file containing all the data gathered thus far."""
     if config.verbose:
@@ -117,7 +117,7 @@ def dump(config, out_path):
 
 @cli.command()
 @click.argument('out-path', type=click.Path(), required=False)
-@passConfig
+@pass_config
 def write_conf(config, out_path):
     """Write a config file based on the given arguments to out-path.
     Defaults to the standard config file location for your operating system."""
