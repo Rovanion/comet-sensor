@@ -1,5 +1,5 @@
 click >= 5.1
-httpretty == 0.8.10
+httpretty >= 0.8.14
 git-lint >= 0.0.8
 pep8 >= 1.4
 pytest >= 2.5
