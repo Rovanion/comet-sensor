@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Module containing the logic associated with passing configuration
 between the different functions of comet as well as loading and

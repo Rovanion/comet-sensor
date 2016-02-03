@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+"""Test the data dumping mechanism."""
+
+
 import glob
 from support import *
 

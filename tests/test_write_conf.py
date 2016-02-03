@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Test the functionality of the write_config subcommand.
 """

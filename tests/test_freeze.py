@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Seriously, we're testing the test code here. Absolutely ridiculous.
 """

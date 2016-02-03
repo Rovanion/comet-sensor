@@ -1,9 +1,12 @@
+# -*- coding: utf-8 -*-
+"""Test the data fetching mechanims."""
+
+
 import glob
 import time
 from support import *
 from comet.main import cli
 from comet.csvio import loadOne
-
 
 
 @isolated_filesystem

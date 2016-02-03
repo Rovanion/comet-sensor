@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 The entry point of the comet-sensor cli program.
 """

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Library for comet-sensor containing functions related to csv file io.
 """

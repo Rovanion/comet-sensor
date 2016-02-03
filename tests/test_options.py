@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+"""Test the configuration management part of the program."""
+
+
 from support import *
 from comet.main import cli
 
