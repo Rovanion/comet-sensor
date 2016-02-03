@@ -2,18 +2,15 @@
 The entry point of the comet-sensor cli program.
 """
 import os
-import re
 import sys
 import glob
 import click
 import datetime
 import urllib.request
 import comet.csvio as csvio
+import comet.plot as plotter
 from datetime import timedelta
 from comet.config import pass_config
-
-
-DATE_MATCHER = re.compile(r'\d\d:\d\d:\d\d \d{4}-\d\d-\d\d')
 
 
 @click.group()
@@ -73,7 +70,7 @@ def fetch(config, url):
         # It get's nasty due to time ajustments done by the sensor.
         if previous_path is not None:
             previous_rows = csvio.loadOne(previous_path)
-            data_start = get_first_data_point_index(previous_rows)
+            data_start = csvio.get_first_data_point_index(previous_rows)
             latest_previous_date = previous_rows[data_start][0].split(' ')[1]
             latest_previous_H_M = ':'.join(previous_rows[data_start][0].split(' ')[0].split(':')[0:2])
             time_of_newest_data_in_previous = datetime.datetime.strptime(
@@ -82,9 +79,9 @@ def fetch(config, url):
 
             filtered_rows = []
             for row in new_rows:
-                if not_data_point(row):
+                if csvio.not_data_point(row):
                     continue
-                time_of_row = date_from_row(row)
+                time_of_row = csvio.date_from_row(row)
                 if time_of_newest_data_in_previous < time_of_row:
                     filtered_rows.append(row)
 
@@ -111,7 +108,6 @@ def dump(config, out_path):
     if config.verbose:
         click.echo('Dumping to' + out_path)
     rows = csvio.loadAll()
-    rows = sorted(rows, key=date_from_row)
     csvio.writeRows(rows, out_path)
 
 
@@ -124,21 +120,13 @@ def write_conf(config, out_path):
     config.write_conf(out_path)
 
 
-def not_data_point(row):
-    """Determine if the row is a data point from the comet sensor."""
-    return not row or DATE_MATCHER.match(row[0]) is None
-
-
-def get_first_data_point_index(rows):
-    """Get the first data point in the given list of rows."""
-    data_start = 0
-    while not_data_point(rows[data_start]):
-        data_start += 1
-    return data_start
-
-
-def date_from_row(row):
-    """Get the date from the data point row."""
-    if not_data_point(row):
-        return datetime.datetime(1970, 1, 1)
-    return datetime.datetime.strptime(row[0], '%H:%M:%S %Y-%m-%d')
+@cli.command()
+@click.option('-t', '--type', type=click.Choice(['scatter', 'line']),
+              help='The style of the plot.', prompt=True, default='scatter')
+@click.option('-g', '--group-by', type=click.Choice(['none', 'day', 'week', 'month']),
+              help='Whether to group data by any length.', prompt=True)
+@pass_config
+def plot(config, type, group_by):
+    """Plot the stored data.
+    """
+    plotter.plot(config, type, group_by)
