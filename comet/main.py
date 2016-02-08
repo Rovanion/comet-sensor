@@ -126,8 +126,14 @@ def write_conf(config, out_path):
               help='The style of the plot.', prompt=True, default='scatter')
 @click.option('-g', '--group-by', type=click.Choice(['none', 'day', 'week', 'month']),
               help='Whether to group data by any length.', prompt=True)
+@click.option('-e', '--exclude', type=click.IntRange(1, 4), multiple=True,
+              help="Exclude certain data channels from the plot.")
+@click.option('-i', '--include', type=click.IntRange(1, 4), multiple=True,
+              help="Include only the specified data channels in the plot.")
 @pass_config
-def plot(config, type, group_by):
+def plot(config, type, group_by, exclude, include):
     """Plot the stored data.
     """
-    plotter.plot(config, type, group_by)
+    if include:
+        exclude = [i for i in range(5) if i not in include]
+    plotter.plot(config, type, group_by, set(exclude))

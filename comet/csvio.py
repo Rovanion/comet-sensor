@@ -76,3 +76,11 @@ def date_from_row(row):
 def get_labels(rows):
     """Get the labels of a CSV file from the sensor."""
     return rows[get_first_data_point_index(rows) - 2]
+
+
+def get_columns(rows):
+    """Turn the rows passed into a list of columns."""
+    columns = list()
+    for i in range(4):
+        columns.append([line[i+1] for line in rows])
+    return columns

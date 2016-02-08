@@ -7,7 +7,7 @@ Functions related to plotting the collected data.
 import comet.csvio as csvio
 
 
-def plot(config, graph_type, group_by):
+def plot(config, graph_type, group_by, exclude_channels=None):
     """Plot the gathered data.
     """
     # We import plotly local to the function not to slow down the rest of the program,
@@ -19,9 +19,7 @@ def plot(config, graph_type, group_by):
     labels = csvio.get_labels(data)
     data = data[csvio.get_first_data_point_index(data):]
     dates = [line[0] for line in data]
-    columns = list()
-    for i in range(4):
-        columns.append([line[i+1] for line in data])
+    columns = csvio.get_columns(data)
 
     if graph_type == 'scatter':
         mode_string = 'markers'
@@ -30,6 +28,8 @@ def plot(config, graph_type, group_by):
 
     traces = list()
     for i in range(4):
+        if i+1 in exclude_channels:
+            continue
         if labels[i+1] == 'CO2 level':
             group = 'y1'
         else:
