@@ -81,6 +81,6 @@ def get_labels(rows):
 def get_columns(rows):
     """Turn the rows passed into a list of columns."""
     columns = list()
-    for i in range(4):
-        columns.append([line[i+1] for line in rows])
+    for i in range(5):
+        columns.append([line[i] for line in rows])
     return columns
