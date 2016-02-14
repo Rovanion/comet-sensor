@@ -1,6 +1,8 @@
 """
 Support module with shared code repeated in most of the tests.
 """
+
+
 import os
 import sys
 import shutil
@@ -61,6 +63,7 @@ def isolated_filesystem(func):
 def runner():
     class PrintRunner(CliRunner):
         def invoke(self, *args, **kwargs):
+            kwargs['catch_exceptions'] = False
             result = super(PrintRunner, self).invoke(*args, **kwargs)
             print(result.output)
             return result
