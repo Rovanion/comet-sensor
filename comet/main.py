@@ -8,6 +8,8 @@ import glob
 import click
 import datetime
 import urllib.request
+import comet.time as time
+import comet.data as data
 import comet.csvio as csvio
 import comet.plot as plotter
 from datetime import timedelta
@@ -71,18 +73,15 @@ def fetch(config, url):
         # It get's nasty due to time ajustments done by the sensor.
         if previous_path is not None:
             previous_rows = csvio.loadOne(previous_path)
-            data_start = csvio.get_first_data_point_index(previous_rows)
-            latest_previous_date = previous_rows[data_start][0].split(' ')[1]
-            latest_previous_H_M = ':'.join(previous_rows[data_start][0].split(' ')[0].split(':')[0:2])
-            time_of_newest_data_in_previous = datetime.datetime.strptime(
-                latest_previous_date + ' ' + latest_previous_H_M,
-                '%Y-%m-%d %H:%M') + timedelta(minutes=1)
-
+            data_start = data.get_first_data_point_index(previous_rows)
+            print(data_start)
+            print(previous_rows[:data_start])
+            time_of_newest_data_in_previous = time.datetime_from_row(previous_rows[data_start], 'second')
             filtered_rows = []
             for row in new_rows:
-                if csvio.not_data_point(row):
+                if data.not_data_point(row):
                     continue
-                time_of_row = csvio.date_from_row(row)
+                time_of_row = time.datetime_from_row(row)
                 if time_of_newest_data_in_previous < time_of_row:
                     filtered_rows.append(row)
 

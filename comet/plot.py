@@ -4,6 +4,7 @@ Functions related to plotting the collected data.
 """
 
 
+import comet.data as data
 import comet.csvio as csvio
 
 
@@ -17,15 +18,17 @@ def plot(config, graph_type, group_by, excluded_channels=None):
     data = csvio.loadAll(config)
     device_name = data[0][1]
     labels = csvio.get_labels(data)
-    data = data[csvio.get_first_data_point_index(data):]
-    columns = csvio.get_columns(data)
+    data = data[data.get_first_data_point_index(data):]
 
     if graph_type == 'scatter':
-        figure = construct_line_or_scatter(labels, columns, excluded_channels, device_name, 'markers') 
+        columns = data.get_columns(data)
+        figure = construct_line_or_scatter(labels, columns, excluded_channels, device_name, 'markers')
     elif graph_type == 'line':
-        figure = construct_line_or_scatter(labels, columns, excluded_channels, device_name, 'line') 
+        columns = data.get_columns(data)
+        figure = construct_line_or_scatter(labels, columns, excluded_channels, device_name, 'line')
     elif graph_type == 'box':
-        figure = construct_box(labels, columns)
+        groups = data.group(data, group_by)
+        figure = construct_box(labels, groups, excluded_channels, device_name)
 
     plotly.offline.plot(figure, filename=graph_type + '-plot_grouped_by_' +
                         group_by + '.html')
@@ -73,6 +76,6 @@ def construct_line_or_scatter(labels, columns, excluded_channels, device_name, m
     return plotly.graph_objs.Figure(data=traces, layout=layout)
 
 
-def construct_box(labels, columns, excluded_channels):
-    pass
-    
+def construct_box(labels, columns, excluded_channels, device_name):
+    """Returns a plotly box figure ready for drawing."""
+    import plotly
