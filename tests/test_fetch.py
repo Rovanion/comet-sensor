@@ -49,8 +49,8 @@ def test_fetch_twice_separated(runner, freezer):
     result2 = runner.invoke(cli, ['-v', '-d', TEMP_FOLDER, 'fetch', SECOND_URL])
     assert result2.exit_code == 0
     assert len(glob.glob(TEMP_FOLDER + '*.csv')) == 2
-    # There are 134 new datapoints in the second file, so 866 should be removed.
-    assert len(loadOne(glob.glob(TEMP_FOLDER + '*:30:00.csv')[0])) == 134
+    # There are 135 new datapoints in the second file, so 866 should be removed.
+    assert len(loadOne(glob.glob(TEMP_FOLDER + '*:30:00.csv')[0])) == 135
 
 
 @register_uris
@@ -68,6 +68,6 @@ def test_data_folder_without_trailing_slash(runner, freezer):
             freezer.delta(minutes=30)
             result2 = runner.invoke(cli, ['-d', './no_slash', 'fetch', SECOND_URL])
             assert result2.exit_code == 0
-            assert len(loadOne(glob.glob('./no_slash/*:30:00.csv')[0])) == 134
+            assert len(loadOne(glob.glob('./no_slash/*:30:00.csv')[0])) == 135
         finally:
             shutil.rmtree('./no_slash')
