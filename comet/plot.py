@@ -8,7 +8,8 @@ import comet.data as data
 import comet.csvio as csvio
 
 
-def plot(config, graph_type, group_by, sample_width, excluded_channels=None):
+def plot(config, graph_type, group_by, sample_width, weekends_only,
+         business_days_only, excluded_channels=None):
     """Plot the gathered data.
     """
     # We import plotly local to the function not to slow down the rest of the program,
@@ -19,6 +20,10 @@ def plot(config, graph_type, group_by, sample_width, excluded_channels=None):
     device_name = rows[0][1]
     labels = data.get_labels(rows)
     rows = rows[data.get_first_data_point_index(rows):]
+    if weekends_only:
+        rows = data.filter_weekends(rows, True)
+    if business_days_only:
+        rows = data.filter_weekends(rows, False)
 
     if graph_type == 'scatter':
         columns = data.get_columns(rows)

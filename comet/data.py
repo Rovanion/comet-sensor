@@ -3,6 +3,7 @@
 
 
 import re
+import numpy
 import datetime
 import comet.time as time
 
@@ -105,3 +106,9 @@ def rotate_group_with_time_to_start(groups, hour):
         return rotate(groups, index)
     else:
         return groups
+
+
+def filter_weekends(rows, include):
+    """Either only include weekends or entirely exclude them."""
+    return [row for row in rows if include ^
+            numpy.is_busday(time.datetime_from_row(row).date())]
