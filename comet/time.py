@@ -23,3 +23,5 @@ def datetime_from_field(field, cutoff=None):
         return time.replace(second=0, minute=0)
     elif cutoff == 'hour':
         return time.replace(second=0, minute=0, hour=0)
+    else:
+        raise ValueError("The specified cutoff is not a legal option.")

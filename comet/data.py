@@ -41,8 +41,9 @@ def group(data, group_by):
 
     groups = list()
     group_decr = 0
-    beginning_of_period = time.datetime_from_row(data[get_first_data_point_index(data)])
-    period = datetime.timedelta(days=100000)
+    cutoff = 'second'
+    beginning_of_period = time.datetime_from_row(data[get_first_data_point_index(data)], cutoff)
+    period = datetime.timedelta(days=1000000)
     if group_by == 'day':
         period = datetime.timedelta(days=1)
     elif group_by == 'week':
@@ -50,16 +51,21 @@ def group(data, group_by):
     elif group_by == 'month':
         period = datetime.timedelta(months=1)
 
+
+
     for i in range(len(data)):
         # Is it time to start adding data from the beginning of the period again?
-        if time.datetime_from_row(data[i]) - beginning_of_period >= period:
-            beginning_of_period = time.datetime_from_row(data[i])
-            group_decr = i
-            print("Group decr: " + str(group_decr))
-        if group_decr == 0:
+        if time.datetime_from_row(data[i], cutoff) - beginning_of_period >= period:
+            beginning_of_period = time.datetime_from_row(data[i], cutoff)
+            group_decr = int(i/100)
+
+        # Testa skriv om den här skiten baserat på ett timedelta istället för integers.
+        # if time.datetime_from_row <= denna_gruppens_första_tid + timedelta:
+        if group_decr == 0 and i % 100 == 0:
             groups.append([data[i]])
+            print(str(len(groups)) + ' i: ' + str(int(i / 100)))
         else:
-            print(str(time.datetime_from_row(data[i]) - beginning_of_period) +
-                  ",  period: " + str(period) + ",  index: " + str(i))
-            groups[i - group_decr].append(data[i])
+            groups[int(i/100) - group_decr].append(data[i])
+
+    print(len(groups))
     return groups

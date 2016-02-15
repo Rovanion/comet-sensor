@@ -15,19 +15,19 @@ def plot(config, graph_type, group_by, excluded_channels=None):
     # for example printing the help text. Import plotly adds 1.4s to execution time.
     import plotly
 
-    data = csvio.loadAll(config)
-    device_name = data[0][1]
-    labels = csvio.get_labels(data)
-    data = data[data.get_first_data_point_index(data):]
+    rows = csvio.loadAll(config)
+    device_name = rows[0][1]
+    labels = data.get_labels(rows)
+    rows = rows[data.get_first_data_point_index(rows):]
 
     if graph_type == 'scatter':
-        columns = data.get_columns(data)
+        columns = data.get_columns(rows)
         figure = construct_line_or_scatter(labels, columns, excluded_channels, device_name, 'markers')
     elif graph_type == 'line':
-        columns = data.get_columns(data)
+        columns = data.get_columns(rows)
         figure = construct_line_or_scatter(labels, columns, excluded_channels, device_name, 'line')
     elif graph_type == 'box':
-        groups = data.group(data, group_by)
+        groups = data.group(rows, group_by)
         figure = construct_box(labels, groups, excluded_channels, device_name)
 
     plotly.offline.plot(figure, filename=graph_type + '-plot_grouped_by_' +
@@ -76,6 +76,30 @@ def construct_line_or_scatter(labels, columns, excluded_channels, device_name, m
     return plotly.graph_objs.Figure(data=traces, layout=layout)
 
 
-def construct_box(labels, columns, excluded_channels, device_name):
+def construct_box(labels, groups, excluded_channels, device_name):
     """Returns a plotly box figure ready for drawing."""
     import plotly
+
+    print(groups[0])
+
+    color = ['hsl('+str(h)+',50%'+',50%)' for h in linspace(0, 360, len(groups))]
+    data = [{'y': groups[i][0],
+             'type': 'box',
+             'marker': {'color': color[i]}
+         } for i in range(len(groups))]
+    layout = {'xaxis': {'showgrid': False, 'zeroline': False, 'tickangle': 60, 'showticklabels': False},
+              'yaxis': {'zeroline': False, 'gridcolor': 'white'},
+              'paper_bgcolor': 'rgb(233,233,233)',
+              'plot_bgcolor': 'rgb(233,233,233)',
+              'showlegend': False }
+
+    return plotly.graph_objs.Figure(data=data, layout=layout)
+
+
+def linspace(start, stop, n):
+    if n == 1:
+        yield stop
+        return
+    h = (stop - start) / (n - 1)
+    for i in range(n):
+        yield start + h * i

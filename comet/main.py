@@ -121,7 +121,7 @@ def write_conf(config, out_path):
 
 
 @cli.command()
-@click.option('-t', '--type', type=click.Choice(['scatter', 'line']),
+@click.option('-t', '--type', type=click.Choice(['scatter', 'line', 'box']),
               help='The style of the plot.', prompt=True, default='scatter')
 @click.option('-g', '--group-by', type=click.Choice(['none', 'day', 'week', 'month']),
               help='Whether to group data by any length.', prompt=True)
