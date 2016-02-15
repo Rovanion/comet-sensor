@@ -3,12 +3,12 @@
 Functions related to plotting the collected data.
 """
 
-
+import datetime
 import comet.data as data
 import comet.csvio as csvio
 
 
-def plot(config, graph_type, group_by, excluded_channels=None):
+def plot(config, graph_type, group_by, sample_width, excluded_channels=None):
     """Plot the gathered data.
     """
     # We import plotly local to the function not to slow down the rest of the program,
@@ -27,7 +27,7 @@ def plot(config, graph_type, group_by, excluded_channels=None):
         columns = data.get_columns(rows)
         figure = construct_line_or_scatter(labels, columns, excluded_channels, device_name, 'line')
     elif graph_type == 'box':
-        groups = data.group(rows, group_by)
+        groups = data.group(rows, group_by, sample_width)
         figure = construct_box(labels, groups, excluded_channels, device_name)
 
     plotly.offline.plot(figure, filename=graph_type + '-plot_grouped_by_' +
@@ -80,23 +80,31 @@ def construct_box(labels, groups, excluded_channels, device_name):
     """Returns a plotly box figure ready for drawing."""
     import plotly
 
-    print(groups[0])
+    groups = data.rotate_group_with_time_to_start(groups, datetime.time(3, 0))
 
     color = ['hsl('+str(h)+',50%'+',50%)' for h in linspace(0, 360, len(groups))]
-    data = [{'y': groups[i][0],
-             'type': 'box',
-             'marker': {'color': color[i]}
-         } for i in range(len(groups))]
-    layout = {'xaxis': {'showgrid': False, 'zeroline': False, 'tickangle': 60, 'showticklabels': False},
-              'yaxis': {'zeroline': False, 'gridcolor': 'white'},
+    traces = [{'y': groups[i][4],
+               'type': 'box',
+               'name': ':'.join(groups[i][0][0].split(' ')[0].split(':')[:2]),
+               'marker': {'color': color[i]}
+           } for i in range(len(groups))]
+    layout = {'xaxis': {'showgrid': False,
+                        'zeroline': False,
+                        'tickangle': 60,
+                        'showticklabels': True,
+                        'title': 'Time'},
+              'yaxis': {'zeroline': True,
+                        'gridcolor': 'white',
+                        'title': 'Particles per million of CO2'},
               'paper_bgcolor': 'rgb(233,233,233)',
               'plot_bgcolor': 'rgb(233,233,233)',
               'showlegend': False }
 
-    return plotly.graph_objs.Figure(data=data, layout=layout)
+    return plotly.graph_objs.Figure(data=traces, layout=layout)
 
 
 def linspace(start, stop, n):
+    """Generate a linear interpolation between start and stop with n steps."""
     if n == 1:
         yield stop
         return

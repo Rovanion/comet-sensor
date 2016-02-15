@@ -129,10 +129,12 @@ def write_conf(config, out_path):
               help="Exclude certain data channels from the plot.")
 @click.option('-i', '--include', type=click.IntRange(1, 4), multiple=True,
               help="Include only the specified data channels in the plot.")
+@click.option('-w', '--sample-width', type=click.IntRange(1, 1440), default=10,
+              help="The with of each sample for statistical graphs in minutes.")
 @pass_config
-def plot(config, type, group_by, exclude, include):
+def plot(config, type, group_by, sample_width, exclude, include):
     """Plot the stored data.
     """
     if include:
         exclude = [i for i in range(5) if i not in include]
-    plotter.plot(config, type, group_by, set(exclude))
+    plotter.plot(config, type, group_by, sample_width, set(exclude))

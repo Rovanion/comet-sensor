@@ -3,7 +3,6 @@
 
 import datetime
 
-
 def datetime_from_row(row, cutoff=None):
     """Get the full date and time from the data point row."""
     from comet.data import not_data_point
@@ -14,7 +13,16 @@ def datetime_from_row(row, cutoff=None):
 
 def datetime_from_field(field, cutoff=None):
     """Get the full date and time from the format given by the comet sensor."""
-    time = datetime.datetime.strptime(field, '%H:%M:%S %Y-%m-%d')
+    return cut_datetime(datetime.datetime.strptime(field, '%H:%M:%S %Y-%m-%d'), cutoff)
+
+
+def time_from_field(field, cutoff=None):
+    """Return only the hour, minute and second part of a field."""
+    return cut_datetime(datetime.datetime.strptime(field.split(' ')[0], '%H:%M:%S'), cutoff)
+
+
+def cut_datetime(time, cutoff):
+    """Cut off some detail in a datetime."""
     if cutoff is None:
         return time
     elif cutoff == 'second':
