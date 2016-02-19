@@ -123,7 +123,7 @@ def write_conf(config, out_path):
 @cli.command()
 @click.option('-t', '--type', type=click.Choice(['scatter', 'line', 'box']),
               help='The style of the plot.', prompt=True, default='scatter')
-@click.option('-g', '--group-by', type=click.Choice(['none', 'day', 'week', 'month']),
+@click.option('-g', '--group-by', type=click.Choice(['none', 'day', 'week']),
               help='Whether to group data by any length.', prompt=True)
 @click.option('-e', '--exclude', type=click.IntRange(1, 4), multiple=True,
               help="Exclude certain data channels from the plot.")
@@ -135,12 +135,14 @@ def write_conf(config, out_path):
               help="Only include business days into the graph.")
 @click.option('-w', '--weekends-only', flag_value=True,
               help="Only include week days into the graph.")
+@click.option('-n', '--no-outliers', flag_value=True,
+              help="Don't plot outliers when doing statistical plots.")
 @pass_config
 def plot(config, type, group_by, sample_width, exclude, include, weekends_only,
-         business_days_only):
+         business_days_only, no_outliers):
     """Plot the stored data.
     """
-    if include:
-        exclude = [i for i in range(5) if i not in include]
+    if exclude:
+        include = [i for i in include if i not in exclude]
     plotter.plot(config, type, group_by, sample_width, weekends_only,
-                 business_days_only, set(exclude))
+                 business_days_only, no_outliers, list(set(include)))

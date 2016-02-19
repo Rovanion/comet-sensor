@@ -33,3 +33,9 @@ def cut_datetime(time, cutoff):
         return time.replace(second=0, minute=0, hour=0)
     else:
         raise ValueError("The specified cutoff is not a legal option.")
+
+
+def dow_as_string(date):
+    """Return the day of week expressed as a string."""
+    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    return days[date.weekday()]

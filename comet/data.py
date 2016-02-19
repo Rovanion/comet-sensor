@@ -52,8 +52,6 @@ def group(data, group_by, sample_width):
         period = datetime.timedelta(days=1)
     elif group_by == 'week':
         period = datetime.timedelta(weeks=1)
-    elif group_by == 'month':
-        period = datetime.timedelta(months=1)
     sample_width = datetime.timedelta(minutes=sample_width)
     group_index = 0
     first_round = True

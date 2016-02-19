@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='comet-sensor',
-    version='0.6.2',
+    version='0.7.0',
     author = "Rovanion Luckey",
     author_email = "rovanion.luckey@gmail.com",
     description = ("A simple tool for retreiving and dealing with climate data from the Comet T6540 Climate sensor."),
