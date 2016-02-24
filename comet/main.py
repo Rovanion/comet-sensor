@@ -137,12 +137,14 @@ def write_conf(config, out_path):
               help="Only include week days into the graph.")
 @click.option('-n', '--no-outliers', flag_value=True,
               help="Don't plot outliers when doing statistical plots.")
+@click.option('-o', '--out-file', type=click.Path(),
+              help="The file to which the graph is written.")
 @pass_config
 def plot(config, type, group_by, sample_width, exclude, include, weekends_only,
-         business_days_only, no_outliers):
+         business_days_only, no_outliers, out_file):
     """Plot the stored data.
     """
     if exclude:
         include = [i for i in include if i not in exclude]
     plotter.plot(config, type, group_by, sample_width, weekends_only,
-                 business_days_only, no_outliers, list(set(include)))
+                 business_days_only, no_outliers, out_file, list(set(include)))

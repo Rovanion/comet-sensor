@@ -10,7 +10,7 @@ import comet.csvio as csvio
 
 
 def plot(config, graph_type, group_by, sample_width, weekends_only,
-         business_days_only, no_outliers, included_channels=None):
+         business_days_only, no_outliers, out_file=None, included_channels=None):
     """Plot the gathered data.
     """
     # We import plotly local to the function not to slow down the rest of the program,
@@ -25,6 +25,9 @@ def plot(config, graph_type, group_by, sample_width, weekends_only,
         rows = data.filter_weekends(rows, True)
     if business_days_only:
         rows = data.filter_weekends(rows, False)
+    if not rows:
+        raise RuntimeError("After filtering the data for weekends or weekdays "
+                           "there was no data left to plot.")
 
     if graph_type == 'scatter':
         columns = data.get_columns(rows)
@@ -40,8 +43,9 @@ def plot(config, graph_type, group_by, sample_width, weekends_only,
         figure = construct_box(channel_labels, groups, group_by, included_channels,
                                device_name, no_outliers)
 
-    plotly.offline.plot(figure, filename=graph_type + '-plot_grouped_by_' +
-                        group_by + '.html')
+    if not out_file:
+        out_file = graph_type + '-plot_grouped_by_' + group_by + '.html'
+    plotly.offline.plot(figure, filename=out_file)
 
 
 def construct_line_or_scatter(channel_labels, columns, included_channels, device_name,
