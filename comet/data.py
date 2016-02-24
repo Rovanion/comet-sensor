@@ -3,6 +3,7 @@
 
 
 import re
+import math
 import numpy
 import datetime
 import comet.time as time
@@ -60,21 +61,21 @@ def group(data, group_by, sample_width):
         datetime_current_row = time.datetime_from_row(row, cutoff)
         # Is it time to start adding data from the beginning of the period again?
         if datetime_current_row - beginning_of_period >= period:
-            beginning_of_period = datetime_current_row
-            group_index = 0
             first_round = False
+            beginning_of_period += period
+            while datetime_current_row - beginning_of_period >= period:
+                beginning_of_period += period
+            group_index = math.floor((datetime_current_row - beginning_of_period) / sample_width)
         # Did we just go outside the current sample? A sample is e.g. a singe box in a box plot.
-        if datetime_current_row >= beginning_of_period + sample_width * (group_index+1):
-            group_index += 1
+        new_index = math.floor((datetime_current_row - beginning_of_period) / sample_width)
+        if new_index != group_index:
+            group_index = new_index
             if first_round:
                 groups.append([])
             if len(groups[group_index]) < 1:
                 groups[group_index] = [[] for i in range(5)]
-            for i in range(5):
-                groups[group_index][i].append(row[i])
-        else:
-            for i in range(5):
-                groups[group_index][i].append(row[i])
+        for i in range(5):
+            groups[group_index][i].append(row[i])
 
     return groups
 
