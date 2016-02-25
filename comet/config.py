@@ -38,7 +38,6 @@ class Config(object):
 
 
     def write_conf(self, path):
-        print(path)
         if path is None:
             path = self.conf_file
         config = configparser.ConfigParser()

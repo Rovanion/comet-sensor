@@ -74,8 +74,6 @@ def fetch(config, url):
         if previous_path is not None:
             previous_rows = csvio.loadOne(previous_path)
             data_start = data.get_first_data_point_index(previous_rows)
-            print(data_start)
-            print(previous_rows[:data_start])
             time_of_newest_data_in_previous = time.datetime_from_row(previous_rows[data_start], 'second')
             filtered_rows = []
             for row in new_rows:
