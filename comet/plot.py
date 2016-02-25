@@ -3,7 +3,9 @@
 Functions related to plotting the collected data.
 """
 
+import math
 import datetime
+import statistics
 import comet.data as data
 import comet.time as time
 import comet.csvio as csvio
@@ -95,7 +97,10 @@ def construct_box(channel_labels, groups, group_by, included_channels, device_na
     """Returns a plotly box figure ready for drawing."""
     import plotly
 
-    colors = ['hsl(' + str(h) + ',50%' + ',50%)' for h in linspace(0, 360, len(groups))]
+    means = [math.floor(statistics.mean(groups[i][included_channels[0]]))
+             for i in range(len(groups))]
+    colors = ['hsl(' + str(h) + ',50%' + ',50%)' for h in linspace(0, 360, max(means)+1)]
+    colors.reverse()
     if group_by == 'day':
         labels = [':'.join(groups[i][0][0].split(' ')[0].split(':')[:2])
                   for i in range(len(groups))]
@@ -110,7 +115,7 @@ def construct_box(channel_labels, groups, group_by, included_channels, device_na
                'type': 'box',
                'name': labels[i],
                'jitter': 0.3,
-               'marker': {'color': colors[i]},
+               'marker': {'color': colors[means[i]]},
            } for i in range(len(groups))]
     if no_outliers:
         for trace in traces:

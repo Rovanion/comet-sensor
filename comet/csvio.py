@@ -10,6 +10,7 @@ import glob
 import click
 import codecs
 import comet.time as time
+import comet.data as data
 from comet.config import pass_config
 
 
@@ -22,6 +23,10 @@ def loadAll(config):
             reader = csv.reader(in_file)
             for row in reader:
                 if row:
+                    if not data.not_data_point(row):
+                        row.pop()
+                        for i in range(1, 5):
+                            row[i] = float(row[i])
                     rows.append(row)
     if reader is None:
         click.echo('No csv files found in ' + config.data_folder + ', nothing to do.')
