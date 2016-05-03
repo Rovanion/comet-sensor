@@ -144,5 +144,7 @@ def plot(config, type, group_by, sample_width, exclude, include, weekends_only,
     """
     if exclude:
         include = [i for i in include if i not in exclude]
+    if not include:
+        include = [1, 2, 3, 4]
     plotter.plot(config, type, group_by, sample_width, weekends_only,
                  business_days_only, no_outliers, out_file, list(set(include)))
