@@ -12,7 +12,8 @@ import comet.csvio as csvio
 
 
 def plot(config, graph_type, group_by, sample_width, weekends_only,
-         business_days_only, no_outliers, out_file=None, included_channels=None):
+         business_days_only, no_outliers, out_file=None, included_channels=None,
+         limit_value=None):
     """Plot the gathered data.
     """
     # We import plotly local to the function not to slow down the rest of the program,
@@ -34,16 +35,16 @@ def plot(config, graph_type, group_by, sample_width, weekends_only,
     if graph_type == 'scatter':
         columns = data.get_columns(rows)
         figure = construct_line_or_scatter(channel_labels, columns, included_channels,
-                                           device_name, 'markers')
+                                           device_name, 'markers', limit_value)
     elif graph_type == 'line':
         columns = data.get_columns(rows)
         figure = construct_line_or_scatter(channel_labels, columns, included_channels,
-                                           device_name, 'line')
+                                           device_name, 'line', limit_value)
     elif graph_type == 'box':
         groups = data.group(rows, group_by, sample_width)
         groups = data.rotate_group_with_time_to_start(groups, datetime.time(3, 0))
         figure = construct_box(channel_labels, groups, group_by, included_channels,
-                               device_name, no_outliers)
+                               device_name, no_outliers, limit_value)
 
     if not out_file:
         out_file = graph_type + '-plot_grouped_by_' + group_by + '.html'
@@ -51,7 +52,7 @@ def plot(config, graph_type, group_by, sample_width, weekends_only,
 
 
 def construct_line_or_scatter(channel_labels, columns, included_channels, device_name,
-                              mode_string):
+                              mode_string, limit_value):
     """Returns a plotly line or scatter plot figure ready for drawing."""
     import plotly
 
@@ -70,6 +71,9 @@ def construct_line_or_scatter(channel_labels, columns, included_channels, device
             mode=mode_string,
             yaxis=group
         ))
+
+    if limit_value:
+        traces.append(get_limit_line(columns[0][0], columns[0][-1], limit_value))
 
     layout = plotly.graph_objs.Layout(
         title='Sensor data from ' + device_name,
@@ -93,10 +97,10 @@ def construct_line_or_scatter(channel_labels, columns, included_channels, device
 
 
 def construct_box(channel_labels, groups, group_by, included_channels, device_name,
-                  no_outliers):
+                  no_outliers, limit_value):
     """Returns a plotly box figure ready for drawing."""
     import plotly
-
+    print(groups[-1][0][0])
     means = [math.floor(statistics.mean(groups[i][included_channels[0]]))
              for i in range(len(groups))]
     colors = ['hsl(' + str(h) + ',50%' + ',50%)' for h in linspace(0, 360, max(means)+1)]
@@ -110,6 +114,7 @@ def construct_box(channel_labels, groups, group_by, included_channels, device_na
                   for i in range(len(groups))]
     else:
         labels = [groups[i][0][0] for i in range(len(groups))]
+    print(labels[0])
 
     traces = [{'y': groups[i][included_channels[0]],
                'type': 'box',
@@ -120,6 +125,9 @@ def construct_box(channel_labels, groups, group_by, included_channels, device_na
     if no_outliers:
         for trace in traces:
             trace.update(boxpoints=False)
+
+    if limit_value:
+        traces.append(get_limit_line(labels[0], labels[-1], limit_value))
 
     layout = {'title': channel_labels[included_channels[0]] + ' data from ' + device_name,
               'xaxis': {'showgrid': False,
@@ -145,3 +153,15 @@ def linspace(start, stop, n):
     h = (stop - start) / (n - 1)
     for i in range(n):
         yield start + h * i
+
+
+def get_limit_line(start_date, stop_date, y):
+    import plotly
+    # Add a red line to punctuate some limit.
+    return plotly.graph_objs.Scatter(
+        x=[start_date, stop_date],
+        y=[y, y],
+        name='Limit',
+        marker={'color': 'red'},
+        mode='lines'
+    )

@@ -137,9 +137,11 @@ def write_conf(config, out_path):
               help="Don't plot outliers when doing statistical plots.")
 @click.option('-o', '--out-file', type=click.Path(),
               help="The file to which the graph is written.")
+@click.option('-l', '--limit-value', type=int,
+              help="Place a red line at this height in the graph.")
 @pass_config
 def plot(config, type, group_by, sample_width, exclude, include, weekends_only,
-         business_days_only, no_outliers, out_file):
+         business_days_only, no_outliers, out_file, limit_value):
     """Plot the stored data.
     """
     if exclude:
@@ -147,4 +149,5 @@ def plot(config, type, group_by, sample_width, exclude, include, weekends_only,
     if not include:
         include = [1, 2, 3, 4]
     plotter.plot(config, type, group_by, sample_width, weekends_only,
-                 business_days_only, no_outliers, out_file, list(set(include)))
+                 business_days_only, no_outliers, out_file, list(set(include)),
+                 limit_value)
