@@ -19,6 +19,7 @@ def loadAll(config):
     rows = []
     reader = None
     for path in sorted(glob.iglob(config.data_folder + '/*.csv')):
+        print(path)
         with codecs.open(path, 'r', encoding='latin1') as in_file:
             reader = csv.reader(in_file)
             for row in reader:
@@ -26,7 +27,10 @@ def loadAll(config):
                     if not data.not_data_point(row):
                         row.pop()
                         for i in range(1, 5):
-                            row[i] = float(row[i])
+                            if row[i] != 'n/a':
+                                row[i] = float(row[i])
+                            else:
+                                row[i] = 0.0
                     rows.append(row)
     if reader is None:
         click.echo('No csv files found in ' + config.data_folder + ', nothing to do.')
