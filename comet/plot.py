@@ -89,7 +89,8 @@ def construct_line_or_scatter(channel_labels, columns, included_channels, device
                 color='rgb(148, 103, 189)'
             ),
             overlaying='y',
-            side='right'
+            side='right',
+            zeroline=False
         )
     )
 
@@ -100,7 +101,7 @@ def construct_box(channel_labels, groups, group_by, included_channels, device_na
                   no_outliers, limit_value):
     """Returns a plotly box figure ready for drawing."""
     import plotly
-    print(groups[-1][0][0])
+
     means = [math.floor(statistics.mean(groups[i][included_channels[0]]))
              for i in range(len(groups))]
     colors = ['hsl(' + str(h) + ',50%' + ',50%)' for h in linspace(0, 360, max(means)+1)]
@@ -114,7 +115,6 @@ def construct_box(channel_labels, groups, group_by, included_channels, device_na
                   for i in range(len(groups))]
     else:
         labels = [groups[i][0][0] for i in range(len(groups))]
-    print(labels[0])
 
     traces = [{'y': groups[i][included_channels[0]],
                'type': 'box',
@@ -135,7 +135,7 @@ def construct_box(channel_labels, groups, group_by, included_channels, device_na
                         'tickangle': 60,
                         'showticklabels': True,
                         'title': 'Time'},
-              'yaxis': {'zeroline': True,
+              'yaxis': {'zeroline': False,
                         'gridcolor': 'white',
                         'title': 'Particles per million of CO2'},
               'paper_bgcolor': 'rgb(233,233,233)',
