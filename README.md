@@ -9,13 +9,25 @@ A simple script for retreiving and dealing with climate data from the Comet T654
 **Table of Contents**
 
 - [Comet Web Sensor Data Handler](#comet-web-sensor-data-handler)
+    - [Examples](#examples)
     - [Dependencies](#dependencies)
     - [Installation](#installation)
     - [Usage](#usage)
     - [License](#license)
     - [Development](#development)
+    - [Testing](#testing)
 
 <!-- markdown-toc end -->
+
+
+Examples
+--------
+
+Collect and make your climate data into beautiful _interactive_ graphs!
+
+| Line Graph | Statistical Box Plot |
+| ---------- | -------------------- |
+| [![Line Graph](https://raw.githubusercontent.com/Rovanion/comet-sensor/master/examples/2016-04-25%20-%202016-04-30.png)](https://rawgit.com/Rovanion/comet-sensor/master/examples/2016-04-25%20-%202016-04-30.html) | [![Statistical Box Plot](https://raw.githubusercontent.com/Rovanion/comet-sensor/master/examples/statistical-box-graph.png)](https://rawgit.com/Rovanion/comet-sensor/master/examples/statistical-box-graph.html) |
 
 
 
@@ -65,6 +77,19 @@ You can then use the dump command to export all the gathered data, by default to
 
 ```bash
 comet-sensor dump
+```
+
+In order to get help on producing graphs, please see:
+
+```
+comet-sensor plot --help
+```
+
+The two [example graphs](#examples) are produced with the following two commands:
+
+```
+comet-sensor -d some-data-folder/ plot -t line -l 1000 -g none
+comet-sensor -d other-data-folder/ plot -t box -l 1000 -g day -i 4
 ```
 
 
